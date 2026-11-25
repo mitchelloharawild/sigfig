@@ -210,7 +210,7 @@ test_that("serialises to a new process", {
   rds <- tempfile(fileext = ".rds")
   script <- tempfile(fileext = ".R")
   on.exit(unlink(c(rds, script)))
-  saveRDS(precision(1:1e5 / 8, rep(c(1L, -1L), each = 5e4)), rds)
+  saveRDS(sigfig(1:1e5 / 8, rep(c(1L, -1L), each = 5e4)), rds)
   expect_lt(length(serialize(field_p(readRDS(rds)), NULL)), 1000)
   # The package isn't attached or loaded beforehand
   writeLines(c(

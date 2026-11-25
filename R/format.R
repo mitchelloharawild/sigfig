@@ -5,15 +5,15 @@
 #' are zeros. Numbers without known precision are displayed as ordinary numbers,
 #' using up to 15 significant digits.
 #'
-#' @param x A [precision()] vector.
+#' @param x A [sigfig()] vector.
 #' @param ... Not used.
 #'
 #' @return An unnamed character vector the size of `x`. Missing values are
 #'   `"NA"`, or `NA` with `as.character()`.
 #' @examples
-#' format(precision(1234.567, c(4, 1, 0, -2, NA)))
+#' format(sigfig(1234.567, c(4, 1, 0, -2, NA)))
 #' @export
-format.precision <- function(x, ...) {
+format.sigfig <- function(x, ...) {
   out <- prec_format(x)
   out[is.na(out)] <- "NA"
   out
@@ -25,17 +25,17 @@ prec_format <- function(x) {
 }
 
 #' @export
-vec_ptype_abbr.precision <- function(x, ...) {
+vec_ptype_abbr.sigfig <- function(x, ...) {
   "prec"
 }
 
 #' @export
-vec_ptype_full.precision <- function(x, ...) {
-  "precision"
+vec_ptype_full.sigfig <- function(x, ...) {
+  "sigfig"
 }
 
 #' @export
-obj_print_data.precision <- function(x, ..., max = getOption("max.print")) {
+obj_print_data.sigfig <- function(x, ..., max = getOption("max.print")) {
   n <- length(x)
   if (n == 0L) return(invisible(x))
   shown <- if (n > max) x[seq_len(max)] else x

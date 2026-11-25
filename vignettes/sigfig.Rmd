@@ -22,7 +22,7 @@ library(sigfig)
 
 A number alone doesn't say how well it is known. Is `3.2` known to the nearest tenth, or is it `3.20` with the zero dropped? Does `1200` mean "about twelve hundred", or exactly twelve hundred? Base R forgets this the moment a number is created, so the result of `3.2 + 4.12` is `7.32`, as though both inputs were known to the hundredth.
 
-The precision package keeps track. A `precision` vector pairs every number with the decimal places to which it is known:
+The precision package keeps track. A `sigfig` vector pairs every number with the decimal places to which it is known:
 
 * values are displayed exactly as their precision describes,
 * arithmetic gives a result with the coarsest precision of its inputs, and
@@ -32,18 +32,18 @@ The precision is stored with run length encoding, so a million numbers with the 
 
 ## Constructing
 
-`precision()` takes the values and the decimal places `p`. A negative `p` counts powers of ten, so `p = -2` is known to the nearest hundred. `p` is recycled, and the default `NA` means the precision is not known, or the number is exact.
+`sigfig()` takes the values and the decimal places `p`. A negative `p` counts powers of ten, so `p = -2` is known to the nearest hundred. `p` is recycled, and the default `NA` means the precision is not known, or the number is exact.
 
 ```{r construct}
-precision(c(3.2, 4.12), p = c(1, 2))
+sigfig(c(3.2, 4.12), p = c(1, 2))
 
-precision(1234.567, p = c(2, 0, -2, NA))
+sigfig(1234.567, p = c(2, 0, -2, NA))
 ```
 
-`as_precision()` also reads the precision from text, counting the decimal places written, less any exponent.
+`as_sigfig()` also reads the precision from text, counting the decimal places written, less any exponent.
 
 ```{r as-precision}
-as_precision(c("3.20", "4.1", "1.20e3"))
+as_sigfig(c("3.20", "4.1", "1.20e3"))
 ```
 
 Plain numbers become exact (`p = NA`), and the precision of an existing vector can be replaced with `set_digits()`.
@@ -52,13 +52,13 @@ Plain numbers become exact (`p = NA`), and the precision of an existing vector c
 
 The display rule is to round to `p` and show exactly that many decimal places.
 
-* **Positive `p`** shows `p` decimal places, including trailing zeros: `precision(3.2, 2)` is `3.20`.
+* **Positive `p`** shows `p` decimal places, including trailing zeros: `sigfig(3.2, 2)` is `3.20`.
 * **Zero or negative `p`** shows a whole number. With negative `p` the unknown digits are zeros, so `1234.567` known to the nearest hundred is `1200`.
 * **Missing `p`** shows an ordinary R number, with up to 15 significant digits.
 * A missing value (`x = NA`) is `NA`, whatever its `p`.
 
 ```{r display}
-x <- precision(c(3.2, 9.996, -0.04, 1234.567, NA, 2.5), c(2, 2, 1, -2, 1, NA))
+x <- sigfig(c(3.2, 9.996, -0.04, 1234.567, NA, 2.5), c(2, 2, 1, -2, 1, NA))
 x
 format(x)
 ```
@@ -74,8 +74,8 @@ prec_value(x)
 The result of arithmetic has the coarsest known precision of its inputs, meaning the smallest `p`. The full value is calculated and kept, and rounded only when displayed.
 
 ```{r arith}
-a <- precision(3.2, 1)
-b <- precision(4.12, 2)
+a <- sigfig(3.2, 1)
+b <- sigfig(4.12, 2)
 a + b
 prec_value(a + b)
 ```
@@ -89,7 +89,7 @@ knitr::include_graphics("figures/grid.svg")
 Keeping the full value matters when many steps are chained. Rounding after every step loses what is below the display precision, and the loss compounds. Ten additions of `0.04`, known to the tenth, show the difference.
 
 ```{r accumulate}
-y <- precision(rep(0.04, 10), p = 1)
+y <- sigfig(rep(0.04, 10), p = 1)
 
 # Rounding every step: each 0.04 becomes 0.0
 Reduce(`+`, round(prec_value(y), 1))
@@ -104,7 +104,7 @@ Plain numbers are exact, so don't make the result any coarser, and `NA` precisio
 ```{r exact}
 a * 2
 a + 5
-a + precision(5, NA)
+a + sigfig(5, NA)
 ```
 
 ### Reductions
@@ -112,7 +112,7 @@ a + precision(5, NA)
 Reductions (`sum()`, `prod()`, `mean()`, `min()`, `max()`, `range()`, `median()` and `quantile()`) use the coarsest precision of all elements. Cumulative functions use the coarsest precision of the elements so far. Missing values are ignored for the precision only when `na.rm = TRUE`.
 
 ```{r reductions}
-z <- precision(c(1.234, 5.6, 7.89), p = c(3, 1, 2))
+z <- sigfig(c(1.234, 5.6, 7.89), p = c(3, 1, 2))
 sum(z)
 mean(z)
 cumsum(z)
@@ -125,23 +125,23 @@ Rounding functions only ever make the precision coarser: `round(z, 2)` is known 
 Comparison rounds both sides to their common coarsest precision. Plain numbers are exact, so take the precision of the other side.
 
 ```{r compare}
-precision(3.14159, 2) == 3.14
-precision(3.12, 2) == precision(3.1, 1)
+sigfig(3.14159, 2) == 3.14
+sigfig(3.12, 2) == sigfig(3.1, 1)
 ```
 
 Equality like this is not transitive. With `3.12` and `3.14` both known to the hundredth, and `3.1` known to the tenth:
 
 ```{r transitive}
-u <- precision(3.12, 2)
-v <- precision(3.1, 1)
-w <- precision(3.14, 2)
+u <- sigfig(3.12, 2)
+v <- sigfig(3.1, 1)
+w <- sigfig(3.14, 2)
 c(`u == v` = u == v, `v == w` = v == w, `u == w` = u == w)
 ```
 
 If `==` were used to find duplicates, which values are grouped together would depend on the order they were seen. So `unique()`, `duplicated()`, `match()`, `sort()`, `order()` and grouping don't use it. They use each element's own rounded value *and* its precision, so `3.1` (to the tenth) and `3.10` (to the hundredth) are different values, with the coarser sorted first. All missing values are the same.
 
 ```{r grouping}
-unique(precision(c(3.1, 3.1, 3.12), p = c(1, 2, 1)))
+unique(sigfig(c(3.1, 3.1, 3.12), p = c(1, 2, 1)))
 vctrs::vec_equal(u, v)
 ```
 
@@ -149,7 +149,7 @@ vctrs::vec_equal(u, v)
 
 ## The data structure
 
-A `precision` vector is a `vctrs::new_rcrd()` record with two fields of equal size: the full values `x`, and the precision `p`.
+A `sigfig` vector is a `vctrs::new_rcrd()` record with two fields of equal size: the full values `x`, and the precision `p`.
 
 ```{r fig-rcrd, echo = FALSE, out.width = "100%", fig.alt = "A record with two fields. Field x is a double vector holding 3.2, 4.12, 7.32 and 1234.567. Field p is an integer vector holding 1, 2, 1 and -2. Arrows lead to the printed values 3.2, 4.12, 7.3 and 1200."}
 knitr::include_graphics("figures/rcrd.svg")
@@ -170,7 +170,7 @@ knitr::include_graphics("figures/runs.svg")
 `prec_runs()` shows the runs without expanding anything.
 
 ```{r runs}
-big <- precision(rep(1.5, 1e6), p = 1)
+big <- sigfig(rep(1.5, 1e6), p = 1)
 prec_runs(big)
 length(big)
 ```
@@ -184,8 +184,8 @@ knitr::include_graphics("figures/add.svg")
 The same example, with live code.
 
 ```{r add-example}
-a6 <- precision(c(3.2, 1.5, 2.7, 0.9, 5.25, 6.1), p = c(1, 1, 1, 1, 2, 2))
-b6 <- precision(c(4.12, 0.88, 7.5, 1.4, 2, 3.333), p = c(2, 2, 0, 0, 0, 3))
+a6 <- sigfig(c(3.2, 1.5, 2.7, 0.9, 5.25, 6.1), p = c(1, 1, 1, 1, 2, 2))
+b6 <- sigfig(c(4.12, 0.88, 7.5, 1.4, 2, 3.333), p = c(2, 2, 0, 0, 0, 3))
 ab <- a6 + b6
 ab
 prec_runs(ab)
@@ -242,11 +242,11 @@ The time for `p` alone, when adding at this size, is 1.9 microseconds for 1 run,
 
 ## Limitations
 
-* **Multiplication and division use the coarsest `p` too.** This is a placeholder, and is natural for addition and subtraction where absolute errors add. For `*` and `/` it misstates relative error. `precision(0.01, 2) * 100` is `1.00` though only one figure is known, and small products can vanish.
+* **Multiplication and division use the coarsest `p` too.** This is a placeholder, and is natural for addition and subtraction where absolute errors add. For `*` and `/` it misstates relative error. `sigfig(0.01, 2) * 100` is `1.00` though only one figure is known, and small products can vanish.
 
     ```{r limits-mult}
-    precision(0.01, 2) * 100
-    precision(0.1, 1) * precision(0.1, 1)
+    sigfig(0.01, 2) * 100
+    sigfig(0.1, 1) * sigfig(0.1, 1)
     ```
 
     The rule is provisional. The precision of a result is decided in one place, so a rule based on significant figures (as taught in school science), or on propagating the uncertainty, could replace it. Either would depend on the values, so would split the runs of `p` wherever results change magnitude.

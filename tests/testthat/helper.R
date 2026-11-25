@@ -2,7 +2,7 @@
 rle_touch <- function(x, i, value) .Call(C_rle_touch, x, i, value)
 rle_peek <- function(x) .Call(C_rle_peek, x)
 
-state <- function(x) rle_state(if (is_precision(x)) field_p(x) else x)
+state <- function(x) rle_state(if (is_sigfig(x)) field_p(x) else x)
 
 # An RLE even if it is small
 force_rle <- function(x) {

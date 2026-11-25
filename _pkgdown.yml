@@ -3,20 +3,20 @@ template:
   bootstrap: 5
 
 reference:
-  - title: Creating precision vectors
+  - title: Creating sigfig vectors
     contents:
-      - precision
-      - new_precision
-      - is_precision
-      - as_precision
+      - sigfig
+      - new_sigfig
+      - is_sigfig
+      - as_sigfig
   - title: Components
     contents:
       - prec_value
       - prec_digits
       - prec_runs
       - set_digits
-  - title: Working with precision
+  - title: Working with sigfig
     contents:
-      - precision-arithmetic
-      - precision-comparison
-      - format.precision
+      - sigfig-arithmetic
+      - sigfig-comparison
+      - format.sigfig

@@ -15,16 +15,16 @@
 #'
 #' `min()`, `max()` and `range()` use the full value.
 #'
-#' @name precision-comparison
+#' @name sigfig-comparison
 #' @examples
-#' precision(3.14159, 2) == 3.14
-#' precision(3.12, 2) == precision(3.1, 1)
-#' unique(precision(c(3.1, 3.1, 3.12), c(1, 2, 1)))
+#' sigfig(3.14159, 2) == 3.14
+#' sigfig(3.12, 2) == sigfig(3.1, 1)
+#' unique(sigfig(c(3.1, 3.1, 3.12), c(1, 2, 1)))
 NULL
 
-compare_precision <- function(op, e1, e2) {
+compare_sigfig <- function(op, e1, e2) {
   for (e in list(e1, e2)) {
-    ok <- is_precision(e) ||
+    ok <- is_sigfig(e) ||
       (is.numeric(e) && !is.object(e)) ||
       (is.logical(e) && !is.object(e) && all(is.na(e)))
     if (!ok) stop_incompatible_op(op, e1, e2)
@@ -32,7 +32,7 @@ compare_precision <- function(op, e1, e2) {
   x <- operand_value(e1, "e1")
   y <- operand_value(e2, "e2")
   n <- vec_size_common(x = x, y = y, .call = NULL)
-  p <- op_precision(op, e1, e2, n)
+  p <- op_sigfig(op, e1, e2, n)
   fn <- switch(
     op, "==" = `==`, "!=" = `!=`, "<" = `<`, "<=" = `<=`, ">" = `>`, ">=" = `>=`
   )
@@ -40,19 +40,19 @@ compare_precision <- function(op, e1, e2) {
 }
 
 #' @export
-`==.precision` <- function(e1, e2) compare_precision("==", e1, e2)
+`==.sigfig` <- function(e1, e2) compare_sigfig("==", e1, e2)
 
 #' @export
-`!=.precision` <- function(e1, e2) compare_precision("!=", e1, e2)
+`!=.sigfig` <- function(e1, e2) compare_sigfig("!=", e1, e2)
 
 #' @export
-`<.precision` <- function(e1, e2) compare_precision("<", e1, e2)
+`<.sigfig` <- function(e1, e2) compare_sigfig("<", e1, e2)
 
 #' @export
-`<=.precision` <- function(e1, e2) compare_precision("<=", e1, e2)
+`<=.sigfig` <- function(e1, e2) compare_sigfig("<=", e1, e2)
 
 #' @export
-`>.precision` <- function(e1, e2) compare_precision(">", e1, e2)
+`>.sigfig` <- function(e1, e2) compare_sigfig(">", e1, e2)
 
 #' @export
-`>=.precision` <- function(e1, e2) compare_precision(">=", e1, e2)
+`>=.sigfig` <- function(e1, e2) compare_sigfig(">=", e1, e2)

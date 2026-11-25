@@ -4,53 +4,53 @@
 #' the number of decimal places written, less any exponent: `"3.20"` is known to
 #' 2 decimal places, and `"1.20e3"` to the nearest ten (`-1`).
 #'
-#' Text of numbers with non-negative precision is restored by `as_precision()`.
+#' Text of numbers with non-negative precision is restored by `as_sigfig()`.
 #' The digits of `"1200"` are assumed to be known (`p = 0`), as text doesn't
 #' describe if trailing zeros of whole numbers are known.
 #'
-#' @param x A numeric, character or [precision()] vector.
+#' @param x A numeric, character or [sigfig()] vector.
 #' @param ... Not used.
 #'
-#' @return A [precision()] vector. Text which isn't a number is an error, except
+#' @return A [sigfig()] vector. Text which isn't a number is an error, except
 #'   `NA` and empty strings which are missing.
 #' @examples
-#' as_precision(3.2)
-#' as_precision(c("3.20", "4.1", "1.20e3"))
+#' as_sigfig(3.2)
+#' as_sigfig(c("3.20", "4.1", "1.20e3"))
 #'
 #' # The full value and displayed text
-#' x <- precision(3.14159, 2)
+#' x <- sigfig(3.14159, 2)
 #' as.double(x)
 #' as.character(x)
 #' @export
-as_precision <- function(x, ...) {
-  UseMethod("as_precision")
+as_sigfig <- function(x, ...) {
+  UseMethod("as_sigfig")
 }
 
 #' @export
-as_precision.default <- function(x, ...) {
-  vec_cast(x, new_precision())
+as_sigfig.default <- function(x, ...) {
+  vec_cast(x, new_sigfig())
 }
 
 #' @export
-as_precision.precision <- function(x, ...) {
+as_sigfig.sigfig <- function(x, ...) {
   x
 }
 
 #' @export
-as_precision.numeric <- function(x, ...) {
-  precision(x)
+as_sigfig.numeric <- function(x, ...) {
+  sigfig(x)
 }
 
 #' @export
-as_precision.character <- function(x, ...) {
-  parse_precision(as.vector(x))
+as_sigfig.character <- function(x, ...) {
+  parse_sigfig(as.vector(x))
 }
 
 number_pattern <-
   "^[+-]?([0-9]+[.]?([0-9]*)|[.]([0-9]+))([eE]([+-]?[0-9]+))?$"
 special_pattern <- "^([+-]?(inf|infinity)|nan)$"
 
-parse_precision <- function(x, to = new_precision(), ..., x_arg = "x",
+parse_sigfig <- function(x, to = new_sigfig(), ..., x_arg = "x",
                             to_arg = "", call = caller_env()) {
   text <- trimws(x)
   text[!is.na(text) & text %in% c("", "NA")] <- NA_character_
@@ -84,52 +84,52 @@ parse_precision <- function(x, to = new_precision(), ..., x_arg = "x",
       pmax(pmin(decimals - exponent, 1e9), -1e9), x_arg, call = call
     )
   }
-  precision(value, p)
+  sigfig(value, p)
 }
 
 # Prototypes -------------------------------------------------------------------
 
 #' @export
-vec_ptype2.precision.precision <- function(x, y, ...) new_precision()
+vec_ptype2.sigfig.sigfig <- function(x, y, ...) new_sigfig()
 #' @export
-vec_ptype2.precision.double <- function(x, y, ...) new_precision()
+vec_ptype2.sigfig.double <- function(x, y, ...) new_sigfig()
 #' @export
-vec_ptype2.double.precision <- function(x, y, ...) new_precision()
+vec_ptype2.double.sigfig <- function(x, y, ...) new_sigfig()
 #' @export
-vec_ptype2.precision.integer <- function(x, y, ...) new_precision()
+vec_ptype2.sigfig.integer <- function(x, y, ...) new_sigfig()
 #' @export
-vec_ptype2.integer.precision <- function(x, y, ...) new_precision()
+vec_ptype2.integer.sigfig <- function(x, y, ...) new_sigfig()
 
 # Casts ------------------------------------------------------------------------
 # vctrs handles logical vectors of only missing values
 
 #' @export
-vec_cast.precision.precision <- function(x, to, ...) x
+vec_cast.sigfig.sigfig <- function(x, to, ...) x
 #' @export
-vec_cast.precision.double <- function(x, to, ...) precision(x)
+vec_cast.sigfig.double <- function(x, to, ...) sigfig(x)
 #' @export
-vec_cast.precision.integer <- function(x, to, ...) precision(x)
+vec_cast.sigfig.integer <- function(x, to, ...) sigfig(x)
 #' @export
-vec_cast.precision.character <- function(x, to, ..., x_arg = "x", to_arg = "",
+vec_cast.sigfig.character <- function(x, to, ..., x_arg = "x", to_arg = "",
                                          call = caller_env()) {
-  parse_precision(x, to, x_arg = x_arg, to_arg = to_arg, call = call)
+  parse_sigfig(x, to, x_arg = x_arg, to_arg = to_arg, call = call)
 }
 #' @export
-vec_cast.double.precision <- function(x, to, ...) field_x(x)
+vec_cast.double.sigfig <- function(x, to, ...) field_x(x)
 #' @export
-vec_cast.integer.precision <- function(x, to, ..., x_arg = "", to_arg = "",
+vec_cast.integer.sigfig <- function(x, to, ..., x_arg = "", to_arg = "",
                                        call = caller_env()) {
   vec_cast(field_x(x), integer(), x_arg = x_arg, to_arg = to_arg, call = call)
 }
 #' @export
-vec_cast.character.precision <- function(x, to, ...) prec_format(x)
+vec_cast.character.sigfig <- function(x, to, ...) prec_format(x)
 
 #' @export
-as.double.precision <- function(x, ...) field_x(x)
+as.double.sigfig <- function(x, ...) field_x(x)
 
 # Truncates, like base
 #' @export
-as.integer.precision <- function(x, ...) as.integer(field_x(x))
+as.integer.sigfig <- function(x, ...) as.integer(field_x(x))
 
 #' @export
-as.character.precision <- function(x, ...) prec_format(x)
+as.character.sigfig <- function(x, ...) prec_format(x)

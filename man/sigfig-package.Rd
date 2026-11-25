@@ -2,7 +2,6 @@
 % Please edit documentation in R/sigfig-package.R
 \docType{package}
 \name{sigfig-package}
-\alias{sigfig}
 \alias{sigfig-package}
 \title{sigfig: Numeric Vectors with Known Precision}
 \description{

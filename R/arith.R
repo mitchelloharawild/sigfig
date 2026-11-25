@@ -30,13 +30,13 @@
 #' Base R finds methods for functions like `sum()` with their first argument, so
 #' use `sum(x, 1)` instead of `sum(1, x)`.
 #'
-#' @name precision-arithmetic
+#' @name sigfig-arithmetic
 #' @examples
-#' precision(3.2, 1) + precision(4.12, 2)
-#' precision(3.2, 1) * 2
-#' sum(precision(c(1.234, 5.6), c(3, 1)))
-#' cumsum(precision(c(1.234, 5.6, 7.89), c(3, 1, 2)))
-#' round(precision(3.14159, 5), 2)
+#' sigfig(3.2, 1) + sigfig(4.12, 2)
+#' sigfig(3.2, 1) * 2
+#' sum(sigfig(c(1.234, 5.6), c(3, 1)))
+#' cumsum(sigfig(c(1.234, 5.6, 7.89), c(3, 1, 2)))
+#' round(sigfig(3.14159, 5), 2)
 NULL
 
 #' The precision of a result
@@ -50,8 +50,8 @@ NULL
 #' @param n The size of elementwise results.
 #' @return An integer vector of precision, the size of the result.
 #' @noRd
-op_precision <- function(op, e1, e2 = NULL, n = length(e1)) {
-  p1 <- if (is_precision(e1)) field_p(e1) else NA_integer_
+op_sigfig <- function(op, e1, e2 = NULL, n = length(e1)) {
+  p1 <- if (is_sigfig(e1)) field_p(e1) else NA_integer_
   switch(
     op,
     # Reductions
@@ -68,7 +68,7 @@ op_precision <- function(op, e1, e2 = NULL, n = length(e1)) {
     sign = rle_rep(NA_integer_, n),
     # Elementwise
     {
-      p2 <- if (is_precision(e2)) field_p(e2) else NA_integer_
+      p2 <- if (is_sigfig(e2)) field_p(e2) else NA_integer_
       rle_coarsest2(p1, p2, n)
     }
   )
@@ -91,58 +91,58 @@ signif_digits <- function(x, digits) {
 # vec_arith() ------------------------------------------------------------------
 
 #' @export
-#' @method vec_arith precision
-vec_arith.precision <- function(op, x, y, ...) {
-  UseMethod("vec_arith.precision", y)
+#' @method vec_arith sigfig
+vec_arith.sigfig <- function(op, x, y, ...) {
+  UseMethod("vec_arith.sigfig", y)
 }
 
 #' @export
-#' @method vec_arith.precision default
-vec_arith.precision.default <- function(op, x, y, ...) {
+#' @method vec_arith.sigfig default
+vec_arith.sigfig.default <- function(op, x, y, ...) {
   stop_incompatible_op(op, x, y)
 }
 
 #' @export
-#' @method vec_arith.precision precision
-vec_arith.precision.precision <- function(op, x, y, ...) {
-  arith_precision(op, x, y)
+#' @method vec_arith.sigfig sigfig
+vec_arith.sigfig.sigfig <- function(op, x, y, ...) {
+  arith_sigfig(op, x, y)
 }
 
 #' @export
-#' @method vec_arith.precision numeric
-vec_arith.precision.numeric <- function(op, x, y, ...) {
-  arith_precision(op, x, y)
+#' @method vec_arith.sigfig numeric
+vec_arith.sigfig.numeric <- function(op, x, y, ...) {
+  arith_sigfig(op, x, y)
 }
 
 #' @export
-#' @method vec_arith.precision logical
-vec_arith.precision.logical <- function(op, x, y, ...) {
+#' @method vec_arith.sigfig logical
+vec_arith.sigfig.logical <- function(op, x, y, ...) {
   check_all_na(op, x, y, y)
-  arith_precision(op, x, y)
+  arith_sigfig(op, x, y)
 }
 
 #' @export
-#' @method vec_arith.precision MISSING
-vec_arith.precision.MISSING <- function(op, x, y, ...) {
+#' @method vec_arith.sigfig MISSING
+vec_arith.sigfig.MISSING <- function(op, x, y, ...) {
   switch(
     op,
     "+" = x,
-    "-" = new_precision(-field_x(x), op_precision(op, x)),
+    "-" = new_sigfig(-field_x(x), op_sigfig(op, x)),
     stop_incompatible_op(op, x, y)
   )
 }
 
 #' @export
-#' @method vec_arith.numeric precision
-vec_arith.numeric.precision <- function(op, x, y, ...) {
-  arith_precision(op, x, y)
+#' @method vec_arith.numeric sigfig
+vec_arith.numeric.sigfig <- function(op, x, y, ...) {
+  arith_sigfig(op, x, y)
 }
 
 #' @export
-#' @method vec_arith.logical precision
-vec_arith.logical.precision <- function(op, x, y, ...) {
+#' @method vec_arith.logical sigfig
+vec_arith.logical.sigfig <- function(op, x, y, ...) {
   check_all_na(op, x, y, x)
-  arith_precision(op, x, y)
+  arith_sigfig(op, x, y)
 }
 
 check_all_na <- function(op, x, y, lgl) {
@@ -150,10 +150,10 @@ check_all_na <- function(op, x, y, lgl) {
 }
 
 operand_value <- function(x, arg) {
-  if (is_precision(x)) field_x(x) else as_bare_double(x, arg, call = NULL)
+  if (is_sigfig(x)) field_x(x) else as_bare_double(x, arg, call = NULL)
 }
 
-arith_precision <- function(op, x, y) {
+arith_sigfig <- function(op, x, y) {
   # Logical operators have no meaningful precision
   fn <- switch(
     op,
@@ -164,5 +164,5 @@ arith_precision <- function(op, x, y) {
   vx <- operand_value(x, "x")
   vy <- operand_value(y, "y")
   n <- vec_size_common(x = vx, y = vy, .call = NULL)
-  new_precision(fn(vx, vy), op_precision(op, x, y, n))
+  new_sigfig(fn(vx, vy), op_sigfig(op, x, y, n))
 }

@@ -3,7 +3,7 @@ max_digits <- 1100L
 
 #' Numbers with known precision
 #'
-#' A `precision` vector pairs each number with the decimal places to which it is
+#' A `sigfig` vector pairs each number with the decimal places to which it is
 #' known. Numbers are displayed and compared as described by their precision,
 #' while calculations use the full value so that rounding error does not
 #' accumulate.
@@ -12,41 +12,41 @@ max_digits <- 1100L
 #' same precision throughout a vector uses very little memory. Names and
 #' dimensions are not supported; they are dropped and an error respectively.
 #'
-#' @param x For `precision()` and `new_precision()`, a vector of numbers.
+#' @param x For `sigfig()` and `new_sigfig()`, a vector of numbers.
 #'   Otherwise, an object to test.
 #' @param p The decimal places known, as whole numbers between -1100 and 1100.
 #'   Negative values describe powers of ten: `-2` is known to the nearest
 #'   hundred. Missing values (the default) are used if the precision is not
 #'   known, or if the number is exact.
 #'
-#' @return `precision()` and `new_precision()` return a `precision` vector.
-#'   `is_precision()` returns `TRUE` or `FALSE`.
+#' @return `sigfig()` and `new_sigfig()` return a `sigfig` vector.
+#'   `is_sigfig()` returns `TRUE` or `FALSE`.
 #'
-#' @seealso [precision-arithmetic], [precision-comparison], [as_precision()],
+#' @seealso [sigfig-arithmetic], [sigfig-comparison], [as_sigfig()],
 #'   [prec_value()]
 #' @examples
-#' x <- precision(3.2, 1)
-#' y <- precision(4.12, 2)
+#' x <- sigfig(3.2, 1)
+#' y <- sigfig(4.12, 2)
 #' x + y
 #' prec_value(x + y)
 #'
 #' # Precision can differ throughout the vector
-#' precision(1234.567, c(2, 0, -2, NA))
+#' sigfig(1234.567, c(2, 0, -2, NA))
 #' @export
-precision <- function(x = double(), p = NA_integer_) {
+sigfig <- function(x = double(), p = NA_integer_) {
   x <- as_bare_double(x)
   p <- as_digits(p)
   n <- vec_size_common(x, p)
   if (length(x) != n) x <- rep_len(x, n)
   if (length(p) != n) p <- rle_rep(p, n)
-  new_precision(x, rle_compress(p))
+  new_sigfig(x, rle_compress(p))
 }
 
-#' @description `new_precision()` is a low-level constructor for developers. It
+#' @description `new_sigfig()` is a low-level constructor for developers. It
 #'   requires a double `x` and integer `p` of the same size.
-#' @rdname precision
+#' @rdname sigfig
 #' @export
-new_precision <- function(x = double(), p = integer()) {
+new_sigfig <- function(x = double(), p = integer()) {
   if (!is.double(x) || !is.null(attributes(x))) {
     cli_abort("{.arg x} must be a double vector without attributes.")
   }
@@ -56,13 +56,13 @@ new_precision <- function(x = double(), p = integer()) {
   if (length(x) != length(p)) {
     cli_abort("{.arg x} and {.arg p} must be the same size.")
   }
-  new_rcrd(list(x = x, p = p), class = "precision")
+  new_rcrd(list(x = x, p = p), class = "sigfig")
 }
 
-#' @rdname precision
+#' @rdname sigfig
 #' @export
-is_precision <- function(x) {
-  inherits(x, "precision")
+is_sigfig <- function(x) {
+  inherits(x, "sigfig")
 }
 
 # Remove all attributes, rejecting dimensions (since size would be ambiguous)
@@ -90,10 +90,10 @@ as_digits <- function(p, arg = "p", call = caller_env()) {
   p
 }
 
-check_precision <- function(x, arg = "x", call = caller_env()) {
-  if (!is_precision(x)) {
+check_sigfig <- function(x, arg = "x", call = caller_env()) {
+  if (!is_sigfig(x)) {
     cli_abort(
-      "{.arg {arg}} must be a {.cls precision} vector, not {.obj_type_friendly {x}}.",
+      "{.arg {arg}} must be a {.cls sigfig} vector, not {.obj_type_friendly {x}}.",
       call = call
     )
   }
@@ -104,8 +104,8 @@ field_p <- function(x) .subset2(x, "p")
 
 #' Components of precision vectors
 #'
-#' @param x A [precision()] vector.
-#' @param p The decimal places known, see [precision()]. Size 1 or the size of
+#' @param x A [sigfig()] vector.
+#' @param p The decimal places known, see [sigfig()]. Size 1 or the size of
 #'   `x`.
 #'
 #' @return
@@ -116,7 +116,7 @@ field_p <- function(x) .subset2(x, "p")
 #' * `set_digits()`: `x` with the precision replaced, leaving values unchanged.
 #'
 #' @examples
-#' x <- precision(c(3.14159, 2.71828, 1200), c(2, 2, -2))
+#' x <- sigfig(c(3.14159, 2.71828, 1200), c(2, 2, -2))
 #' x
 #' prec_value(x)
 #' prec_digits(x)
@@ -124,14 +124,14 @@ field_p <- function(x) .subset2(x, "p")
 #' set_digits(x, 3)
 #' @export
 prec_value <- function(x) {
-  check_precision(x)
+  check_sigfig(x)
   field_x(x)
 }
 
 #' @rdname prec_value
 #' @export
 prec_digits <- function(x) {
-  check_precision(x)
+  check_sigfig(x)
   # Base operators can make run tables stale, this spares x's
   rle_fresh(field_p(x))
 }
@@ -139,7 +139,7 @@ prec_digits <- function(x) {
 #' @rdname prec_value
 #' @export
 prec_runs <- function(x) {
-  check_precision(x)
+  check_sigfig(x)
   runs <- rle_runs(field_p(x))
   new_data_frame(list(value = runs$values, length = runs$lengths))
 }
@@ -147,7 +147,7 @@ prec_runs <- function(x) {
 #' @rdname prec_value
 #' @export
 set_digits <- function(x, p) {
-  check_precision(x)
+  check_sigfig(x)
   p <- as_digits(p)
   n <- length(field_x(x))
   if (length(p) != n) {
@@ -156,7 +156,7 @@ set_digits <- function(x, p) {
     }
     p <- rle_rep(p, n)
   }
-  new_precision(field_x(x), rle_compress(p))
+  new_sigfig(field_x(x), rle_compress(p))
 }
 
 # Round to displayed values, for any x and p of size 1 or n
@@ -169,7 +169,7 @@ prec_round <- function(x, p, n = length(x)) {
 # vctrs accesses fields with INTEGER(), which would materialise p and make its
 # run table stale. Proxies are given their own ALTREP object to spare x's.
 #' @export
-vec_proxy.precision <- function(x, ...) {
+vec_proxy.sigfig <- function(x, ...) {
   new_data_frame(
     list(x = field_x(x), p = rle_fresh(field_p(x))),
     n = length(field_x(x))
@@ -177,14 +177,14 @@ vec_proxy.precision <- function(x, ...) {
 }
 
 #' @export
-vec_restore.precision <- function(x, to, ...) {
-  new_precision(.subset2(x, "x"), rle_compress(.subset2(x, "p")))
+vec_restore.sigfig <- function(x, to, ...) {
+  new_sigfig(.subset2(x, "x"), rle_compress(.subset2(x, "p")))
 }
 
 # Precise values are distinct from those displaying equally with other p, and
 # finest (last) in order. All missing values are the same regardless of p.
 #' @export
-vec_proxy_equal.precision <- function(x, ...) {
+vec_proxy_equal.sigfig <- function(x, ...) {
   value <- field_x(x)
   p <- field_p(x)
   # vctrs considers rows to be incomplete if any column is missing, so missing p
@@ -199,18 +199,18 @@ vec_proxy_equal.precision <- function(x, ...) {
 }
 
 #' @export
-vec_proxy_compare.precision <- function(x, ...) {
-  vec_proxy_equal.precision(x)
+vec_proxy_compare.sigfig <- function(x, ...) {
+  vec_proxy_equal.sigfig(x)
 }
 
 #' @export
-vec_proxy_order.precision <- function(x, ...) {
-  vec_proxy_equal.precision(x)
+vec_proxy_order.sigfig <- function(x, ...) {
+  vec_proxy_equal.sigfig(x)
 }
 
 # Consistent with vec_proxy_equal(), but matching plain numbers when p is NA.
 #' @exportS3Method NULL
-mtfrm.precision <- function(x) {
+mtfrm.sigfig <- function(x) {
   x_round <- prec_round(field_x(x), field_p(x))
   p <- rle_expand(field_p(x))
   out <- as.character(x_round)
@@ -222,19 +222,19 @@ mtfrm.precision <- function(x) {
 # Missing values ---------------------------------------------------------------
 
 #' @export
-is.na.precision <- function(x) {
+is.na.sigfig <- function(x) {
   is.na(field_x(x))
 }
 
 #' @export
-anyNA.precision <- function(x, recursive = FALSE) {
+anyNA.sigfig <- function(x, recursive = FALSE) {
   anyNA(field_x(x))
 }
 
 # Like base vectors, assigning past the end extends with missing values. Needed
 # by rbind() for data frames.
 #' @export
-`[<-.precision` <- function(x, i, value) {
+`[<-.sigfig` <- function(x, i, value) {
   if (missing(i)) i <- TRUE
   if (is.numeric(i) && !is.object(i) && length(i)) {
     size <- max(i, 0, na.rm = TRUE)

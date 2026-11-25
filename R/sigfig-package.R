@@ -14,9 +14,9 @@
 NULL
 
 .onLoad <- function(...) {
-  s3_register("pillar::pillar_shaft", "precision")
+  s3_register("pillar::pillar_shaft", "sigfig")
   # match() and %in% (mtfrm() was added in R 4.2.0)
   if (exists("mtfrm", baseenv(), inherits = FALSE)) {
-    registerS3method("mtfrm", "precision", mtfrm.precision, envir = baseenv())
+    registerS3method("mtfrm", "sigfig", mtfrm.sigfig, envir = baseenv())
   }
 }

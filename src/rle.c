@@ -235,10 +235,10 @@ static SEXP rle_Unserialize(SEXP cls, SEXP state) {
 static Rboolean rle_Inspect(SEXP x, int pre, int deep, int pvec,
                             void (*inspect_subtree)(SEXP, int, int, int)) {
   if (IS_STALE(x)) {
-    Rprintf(" precision_rle [len: %.0f, stale]\n", (double) XLENGTH(x));
+    Rprintf(" sigfig_rle [len: %.0f, stale]\n", (double) XLENGTH(x));
   } else {
     rle_table t = rle_get_table(x);
-    Rprintf(" precision_rle [len: %.0f, runs: %.0f, %s]\n",
+    Rprintf(" sigfig_rle [len: %.0f, runs: %.0f, %s]\n",
             (double) XLENGTH(x), (double) t.k,
             RLE_DENSE(x) == R_NilValue ? "compact" : "materialised");
   }
@@ -390,7 +390,7 @@ static SEXP rle_Extract_subset(SEXP x, SEXP indx, SEXP call) {
 }
 
 void rle_init_class(DllInfo *dll) {
-  rle_class = R_make_altinteger_class("precision_rle", "precision", dll);
+  rle_class = R_make_altinteger_class("sigfig_rle", "sigfig", dll);
 
   R_set_altrep_Length_method(rle_class, rle_Length);
   R_set_altrep_Duplicate_method(rle_class, rle_Duplicate);
