@@ -3,7 +3,7 @@ template:
   bootstrap: 5
   opengraph:
     image:
-      src: pkgdown/social-card.png
+      src: social-card.png
       alt: "The sigfig hex sticker"
     twitter:
       creator: "@mitchoharawild"
