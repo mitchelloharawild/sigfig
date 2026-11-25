@@ -1,6 +1,13 @@
 url: https://pkg.mitchelloharawild.com/sigfig/
 template:
   bootstrap: 5
+  opengraph:
+    image:
+      src: pkgdown/social-card.png
+      alt: "The sigfig hex sticker"
+    twitter:
+      creator: "@mitchoharawild"
+      card: summary
 
 reference:
   - title: Creating sigfig vectors
