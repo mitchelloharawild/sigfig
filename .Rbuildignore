@@ -1,0 +1,11 @@
+^precision\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^_dev$
+^\.claude$
+^hex$
+^docs$
+^pkgdown$
+^_pkgdown\.yml$
+^cran-comments\.md$
+^README\.Rmd$

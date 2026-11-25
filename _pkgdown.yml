@@ -1,0 +1,22 @@
+url: https://pkg.mitchelloharawild.com/precision/
+template:
+  bootstrap: 5
+
+reference:
+  - title: Creating precision vectors
+    contents:
+      - precision
+      - new_precision
+      - is_precision
+      - as_precision
+  - title: Components
+    contents:
+      - prec_value
+      - prec_digits
+      - prec_runs
+      - set_digits
+  - title: Working with precision
+    contents:
+      - precision-arithmetic
+      - precision-comparison
+      - format.precision
