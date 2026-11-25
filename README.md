@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# sigfig
+# sigfig <a href="https://pkg.mitchelloharawild.com/sigfig/"><img src="man/figures/logo.svg" align="right" height="139" alt="sigfig website" /></a>
 
 <!-- badges: start -->
 
