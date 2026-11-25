@@ -1,6 +1,6 @@
-# precision
+# sigfig
 
-precision provides numbers that know how precisely they are known. Each
+sigfig provides numbers that know how precisely they are known. Each
 element of a `sigfig` vector pairs a value with the decimal places to
 which it is known, which is used in three ways:
 
@@ -17,7 +17,7 @@ element.
 
 ## Installation
 
-You can install the development version of precision from GitHub:
+You can install the development version of sigfig from GitHub:
 
 ``` r
 
@@ -36,7 +36,7 @@ y <- sigfig(4.12, p = 2)
 
 # The coarsest precision is used, but the full value is kept
 x + y
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 7.3
 prec_value(x + y)
 #> [1] 7.32
@@ -48,7 +48,7 @@ powers of ten.
 ``` r
 
 sigfig(1234.567, p = c(2, 0, -2, NA))
-#> <precision[4]>
+#> <sigfig[4]>
 #> [1]  1234.57     1235     1200 1234.567
 ```
 
@@ -58,11 +58,11 @@ reductions use the coarsest precision of all of their elements.
 ``` r
 
 x * 2
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 6.4
 
 sum(sigfig(c(1.234, 5.6), p = c(3, 1)))
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 6.8
 ```
 

@@ -13,7 +13,7 @@ nearest tenth, or is it `3.20` with the zero dropped? Does `1200` mean
 the moment a number is created, so the result of `3.2 + 4.12` is `7.32`,
 as though both inputs were known to the hundredth.
 
-The precision package keeps track. A `sigfig` vector pairs every number
+The sigfig package keeps track. A `sigfig` vector pairs every number
 with the decimal places to which it is known:
 
 - values are displayed exactly as their precision describes,

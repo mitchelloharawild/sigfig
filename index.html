@@ -47,11 +47,11 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="precision">precision<a class="anchor" aria-label="anchor" href="#precision"></a>
+<div class="page-header"><h1 id="sigfig">sigfig<a class="anchor" aria-label="anchor" href="#sigfig"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>precision provides numbers that know how precisely they are known. Each element of a <code>sigfig</code> vector pairs a value with the decimal places to which it is known, which is used in three ways:</p>
+<p>sigfig provides numbers that know how precisely they are known. Each element of a <code>sigfig</code> vector pairs a value with the decimal places to which it is known, which is used in three ways:</p>
 <ul>
 <li>Values are displayed exactly as their precision describes.</li>
 <li>Arithmetic gives a result with the coarsest known precision of its inputs, so <code>3.2 + 4.12</code> is <code>7.3</code>.</li>
@@ -61,7 +61,7 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of precision from GitHub:</p>
+<p>You can install the development version of sigfig from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"mitchelloharawild/sigfig"</span><span class="op">)</span></span></code></pre></div>
@@ -77,23 +77,23 @@
 <span></span>
 <span><span class="co"># The coarsest precision is used, but the full value is kept</span></span>
 <span><span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 7.3</span></span>
 <span><span class="fu"><a href="reference/prec_value.html">prec_value</a></span><span class="op">(</span><span class="va">x</span> <span class="op">+</span> <span class="va">y</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7.32</span></span></code></pre></div>
 <p>Precision can differ throughout a vector, and negative values count powers of ten.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">1234.567</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">2</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[4]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[4]&gt;</span></span>
 <span><span class="co">#&gt; [1]  1234.57     1235     1200 1234.567</span></span></code></pre></div>
 <p>Plain numbers are exact, so don’t affect the precision of a result, and reductions use the coarsest precision of all of their elements.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">*</span> <span class="fl">2</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 6.4</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.234</span>, <span class="fl">5.6</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 6.8</span></span></code></pre></div>
 <p>The precision is stored in runs, which are shown by <code><a href="reference/prec_value.html">prec_runs()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -147,6 +147,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://github.com/mitchelloharawild/sigfig/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/mitchelloharawild/sigfig/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
