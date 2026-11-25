@@ -1,5 +1,5 @@
-#ifndef PRECISION_RLE_H
-#define PRECISION_RLE_H
+#ifndef SIGFIG_RLE_H
+#define SIGFIG_RLE_H
 
 #include <R.h>
 #include <Rinternals.h>

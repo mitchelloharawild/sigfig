@@ -13,14 +13,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-# precision
+# sigfig
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/mitchelloharawild/sigfig/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mitchelloharawild/sigfig/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-precision provides numbers that know how precisely they are known. Each element of a `sigfig` vector pairs a value with the decimal places to which it is known, which is used in three ways:
+sigfig provides numbers that know how precisely they are known. Each element of a `sigfig` vector pairs a value with the decimal places to which it is known, which is used in three ways:
 
 - Values are displayed exactly as their precision describes.
 - Arithmetic gives a result with the coarsest known precision of its inputs, so `3.2 + 4.12` is `7.3`.
@@ -30,7 +30,7 @@ The precision is stored with run length encoding using ALTREP, so repeating the 
 
 ## Installation
 
-You can install the development version of precision from GitHub:
+You can install the development version of sigfig from GitHub:
 
 ```r
 # install.packages("pak")

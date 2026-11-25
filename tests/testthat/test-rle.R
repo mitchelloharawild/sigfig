@@ -44,7 +44,7 @@ test_that("long vectors are supported without expansion", {
 })
 
 test_that("kernels match ordinary versions", {
-  n_fuzz <- as.integer(Sys.getenv("PRECISION_FUZZ", "200"))
+  n_fuzz <- as.integer(Sys.getenv("SIGFIG_FUZZ", "200"))
   set.seed(1)
   # Reporting an expectation for each comparison would be slow
   failures <- character()

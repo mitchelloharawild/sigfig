@@ -22,7 +22,7 @@ library(sigfig)
 
 A number alone doesn't say how well it is known. Is `3.2` known to the nearest tenth, or is it `3.20` with the zero dropped? Does `1200` mean "about twelve hundred", or exactly twelve hundred? Base R forgets this the moment a number is created, so the result of `3.2 + 4.12` is `7.32`, as though both inputs were known to the hundredth.
 
-The precision package keeps track. A `sigfig` vector pairs every number with the decimal places to which it is known:
+The sigfig package keeps track. A `sigfig` vector pairs every number with the decimal places to which it is known:
 
 * values are displayed exactly as their precision describes,
 * arithmetic gives a result with the coarsest precision of its inputs, and

@@ -5,7 +5,7 @@
 <rect x="20" y="60" width="180" height="90" rx="8" fill="#d1fae5" stroke="#047857" stroke-width="1.5"/>
 <text x="110" y="88" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">Compact</text>
 <text x="110" y="110" font-size="12" fill="#111827" text-anchor="middle">run table only</text>
-<text x="110" y="130" font-size="12" fill="#111827" text-anchor="middle">precision(), kernels, [ </text>
+<text x="110" y="130" font-size="12" fill="#111827" text-anchor="middle">sigfig(), kernels, [ </text>
 <rect x="290" y="60" width="180" height="90" rx="8" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
 <text x="380" y="88" font-size="14" font-weight="bold" fill="#111827" text-anchor="middle">Expanded by vctrs</text>
 <text x="380" y="110" font-size="12" fill="#111827" text-anchor="middle">n integers, to slice</text>
