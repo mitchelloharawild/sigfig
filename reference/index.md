@@ -1,12 +1,12 @@
 # Package index
 
-## Creating precision vectors
+## Creating sigfig vectors
 
-- [`precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/precision.md)
-  [`new_precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/precision.md)
-  [`is_precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/precision.md)
+- [`sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig.md)
+  [`new_sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig.md)
+  [`is_sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig.md)
   : Numbers with known precision
-- [`as_precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/as_precision.md)
+- [`as_sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/as_sigfig.md)
   : Convert to numbers with known precision
 
 ## Components
@@ -17,11 +17,11 @@
   [`set_digits()`](https://pkg.mitchelloharawild.com/sigfig/reference/prec_value.md)
   : Components of precision vectors
 
-## Working with precision
+## Working with sigfig
 
-- [`precision-arithmetic`](https://pkg.mitchelloharawild.com/sigfig/reference/precision-arithmetic.md)
+- [`sigfig-arithmetic`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig-arithmetic.md)
   : Arithmetic with known precision
-- [`precision-comparison`](https://pkg.mitchelloharawild.com/sigfig/reference/precision-comparison.md)
+- [`sigfig-comparison`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig-comparison.md)
   : Comparing numbers with known precision
-- [`format(`*`<precision>`*`)`](https://pkg.mitchelloharawild.com/sigfig/reference/format.precision.md)
+- [`format(`*`<sigfig>`*`)`](https://pkg.mitchelloharawild.com/sigfig/reference/format.sigfig.md)
   : Format numbers with known precision

@@ -51,7 +51,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>precision provides numbers that know how precisely they are known. Each element of a <code>precision</code> vector pairs a value with the decimal places to which it is known, which is used in three ways:</p>
+<p>precision provides numbers that know how precisely they are known. Each element of a <code>sigfig</code> vector pairs a value with the decimal places to which it is known, which is used in three ways:</p>
 <ul>
 <li>Values are displayed exactly as their precision describes.</li>
 <li>Arithmetic gives a result with the coarsest known precision of its inputs, so <code>3.2 + 4.12</code> is <code>7.3</code>.</li>
@@ -64,7 +64,7 @@
 <p>You can install the development version of precision from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"mitchelloharawild/precision"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"mitchelloharawild/sigfig"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -72,8 +72,8 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.mitchelloharawild.com/sigfig/">sigfig</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.2</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">4.12</span>, p <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.2</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">4.12</span>, p <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The coarsest precision is used, but the full value is kept</span></span>
 <span><span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
@@ -83,7 +83,7 @@
 <span><span class="co">#&gt; [1] 7.32</span></span></code></pre></div>
 <p>Precision can differ throughout a vector, and negative values count powers of ten.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">1234.567</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">2</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">1234.567</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">2</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;precision[4]&gt;</span></span>
 <span><span class="co">#&gt; [1]  1234.57     1235     1200 1234.567</span></span></code></pre></div>
 <p>Plain numbers are exact, so don’t affect the precision of a result, and reductions use the coarsest precision of all of their elements.</p>
@@ -92,12 +92,12 @@
 <span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 6.4</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.234</span>, <span class="fl">5.6</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.234</span>, <span class="fl">5.6</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 6.8</span></span></code></pre></div>
 <p>The precision is stored in runs, which are shown by <code><a href="reference/prec_value.html">prec_runs()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/prec_value.html">prec_runs</a></span><span class="op">(</span><span class="fu"><a href="reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">1e6</span><span class="op">)</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/prec_value.html">prec_runs</a></span><span class="op">(</span><span class="fu"><a href="reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">1e6</span><span class="op">)</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   value  length</span></span>
 <span><span class="co">#&gt; 1     1 1000000</span></span></code></pre></div>
 <p>See <code><a href="articles/sigfig.html">vignette("sigfig")</a></code> for the details of display, comparison, and how the precision is stored.</p>
@@ -108,7 +108,7 @@
 <ul>
 <li>Multiplication and division also use the coarsest precision, which is a placeholder for a rule that accounts for relative error.</li>
 <li>
-<code>precision</code> vectors are records, so don’t have names or dimensions, and some base functions such as <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> don’t treat them as numbers.</li>
+<code>sigfig</code> vectors are records, so don’t have names or dimensions, and some base functions such as <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> don’t treat them as numbers.</li>
 </ul>
 </div>
 </div>

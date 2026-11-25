@@ -13,8 +13,8 @@ nearest tenth, or is it `3.20` with the zero dropped? Does `1200` mean
 the moment a number is created, so the result of `3.2 + 4.12` is `7.32`,
 as though both inputs were known to the hundredth.
 
-The precision package keeps track. A `precision` vector pairs every
-number with the decimal places to which it is known:
+The precision package keeps track. A `sigfig` vector pairs every number
+with the decimal places to which it is known:
 
 - values are displayed exactly as their precision describes,
 - arithmetic gives a result with the coarsest precision of its inputs,
@@ -26,7 +26,7 @@ with the same precision cost almost nothing extra.
 
 ## Constructing
 
-[`precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/precision.md)
+[`sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig.md)
 takes the values and the decimal places `p`. A negative `p` counts
 powers of ten, so `p = -2` is known to the nearest hundred. `p` is
 recycled, and the default `NA` means the precision is not known, or the
@@ -34,23 +34,23 @@ number is exact.
 
 ``` r
 
-precision(c(3.2, 4.12), p = c(1, 2))
-#> <precision[2]>
+sigfig(c(3.2, 4.12), p = c(1, 2))
+#> <sigfig[2]>
 #> [1]  3.2 4.12
 
-precision(1234.567, p = c(2, 0, -2, NA))
-#> <precision[4]>
+sigfig(1234.567, p = c(2, 0, -2, NA))
+#> <sigfig[4]>
 #> [1]  1234.57     1235     1200 1234.567
 ```
 
-[`as_precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/as_precision.md)
+[`as_sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/as_sigfig.md)
 also reads the precision from text, counting the decimal places written,
 less any exponent.
 
 ``` r
 
-as_precision(c("3.20", "4.1", "1.20e3"))
-#> <precision[3]>
+as_sigfig(c("3.20", "4.1", "1.20e3"))
+#> <sigfig[3]>
 #> [1] 3.20  4.1 1200
 ```
 
@@ -64,7 +64,7 @@ The display rule is to round to `p` and show exactly that many decimal
 places.
 
 - **Positive `p`** shows `p` decimal places, including trailing zeros:
-  `precision(3.2, 2)` is `3.20`.
+  `sigfig(3.2, 2)` is `3.20`.
 - **Zero or negative `p`** shows a whole number. With negative `p` the
   unknown digits are zeros, so `1234.567` known to the nearest hundred
   is `1200`.
@@ -74,9 +74,9 @@ places.
 
 ``` r
 
-x <- precision(c(3.2, 9.996, -0.04, 1234.567, NA, 2.5), c(2, 2, 1, -2, 1, NA))
+x <- sigfig(c(3.2, 9.996, -0.04, 1234.567, NA, 2.5), c(2, 2, 1, -2, 1, NA))
 x
-#> <precision[6]>
+#> <sigfig[6]>
 #> [1]  3.20 10.00   0.0  1200    NA   2.5
 format(x)
 #> [1] "3.20"  "10.00" "0.0"   "1200"  "NA"    "2.5"
@@ -102,10 +102,10 @@ rounded only when displayed.
 
 ``` r
 
-a <- precision(3.2, 1)
-b <- precision(4.12, 2)
+a <- sigfig(3.2, 1)
+b <- sigfig(4.12, 2)
 a + b
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 7.3
 prec_value(a + b)
 #> [1] 7.32
@@ -127,7 +127,7 @@ difference.
 
 ``` r
 
-y <- precision(rep(0.04, 10), p = 1)
+y <- sigfig(rep(0.04, 10), p = 1)
 
 # Rounding every step: each 0.04 becomes 0.0
 Reduce(`+`, round(prec_value(y), 1))
@@ -135,10 +135,10 @@ Reduce(`+`, round(prec_value(y), 1))
 
 # Keeping the full value, and rounding once to display
 sum(y)
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 0.4
 Reduce(`+`, as.list(y))
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 0.4
 ```
 
@@ -148,13 +148,13 @@ precision never wins over a known precision.
 ``` r
 
 a * 2
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 6.4
 a + 5
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 8.2
-a + precision(5, NA)
-#> <precision[1]>
+a + sigfig(5, NA)
+#> <sigfig[1]>
 #> [1] 8.2
 ```
 
@@ -174,15 +174,15 @@ precision only when `na.rm = TRUE`.
 
 ``` r
 
-z <- precision(c(1.234, 5.6, 7.89), p = c(3, 1, 2))
+z <- sigfig(c(1.234, 5.6, 7.89), p = c(3, 1, 2))
 sum(z)
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 14.7
 mean(z)
-#> <precision[1]>
+#> <sigfig[1]>
 #> [1] 4.9
 cumsum(z)
-#> <precision[3]>
+#> <sigfig[3]>
 #> [1] 1.234   6.8  14.7
 ```
 
@@ -201,9 +201,9 @@ numbers are exact, so take the precision of the other side.
 
 ``` r
 
-precision(3.14159, 2) == 3.14
+sigfig(3.14159, 2) == 3.14
 #> [1] TRUE
-precision(3.12, 2) == precision(3.1, 1)
+sigfig(3.12, 2) == sigfig(3.1, 1)
 #> [1] TRUE
 ```
 
@@ -212,9 +212,9 @@ to the hundredth, and `3.1` known to the tenth:
 
 ``` r
 
-u <- precision(3.12, 2)
-v <- precision(3.1, 1)
-w <- precision(3.14, 2)
+u <- sigfig(3.12, 2)
+v <- sigfig(3.1, 1)
+w <- sigfig(3.14, 2)
 c(`u == v` = u == v, `v == w` = v == w, `u == w` = u == w)
 #> u == v v == w u == w 
 #>   TRUE   TRUE  FALSE
@@ -233,8 +233,8 @@ with the coarser sorted first. All missing values are the same.
 
 ``` r
 
-unique(precision(c(3.1, 3.1, 3.12), p = c(1, 2, 1)))
-#> <precision[2]>
+unique(sigfig(c(3.1, 3.1, 3.12), p = c(1, 2, 1)))
+#> <sigfig[2]>
 #> [1]  3.1 3.10
 vctrs::vec_equal(u, v)
 #> [1] FALSE
@@ -246,7 +246,7 @@ vctrs::vec_equal(u, v)
 
 ## The data structure
 
-A `precision` vector is a
+A `sigfig` vector is a
 [`vctrs::new_rcrd()`](https://vctrs.r-lib.org/reference/new_rcrd.html)
 record with two fields of equal size: the full values `x`, and the
 precision `p`.
@@ -280,7 +280,7 @@ shows the runs without expanding anything.
 
 ``` r
 
-big <- precision(rep(1.5, 1e6), p = 1)
+big <- sigfig(rep(1.5, 1e6), p = 1)
 prec_runs(big)
 #>   value  length
 #> 1     1 1000000
@@ -305,11 +305,11 @@ The same example, with live code.
 
 ``` r
 
-a6 <- precision(c(3.2, 1.5, 2.7, 0.9, 5.25, 6.1), p = c(1, 1, 1, 1, 2, 2))
-b6 <- precision(c(4.12, 0.88, 7.5, 1.4, 2, 3.333), p = c(2, 2, 0, 0, 0, 3))
+a6 <- sigfig(c(3.2, 1.5, 2.7, 0.9, 5.25, 6.1), p = c(1, 1, 1, 1, 2, 2))
+b6 <- sigfig(c(4.12, 0.88, 7.5, 1.4, 2, 3.333), p = c(2, 2, 0, 0, 0, 3))
 ab <- a6 + b6
 ab
-#> <precision[6]>
+#> <sigfig[6]>
 #> [1]  7.3  2.4   10    2    7 9.43
 prec_runs(ab)
 #>   value length
@@ -366,7 +366,7 @@ package to be installed.
 ``` r
 
 length(serialize(prec_digits(big), NULL))
-#> [1] 137
+#> [1] 131
 length(serialize(rep(1L, 1e6), NULL))
 #> [1] 4000031
 ```
@@ -406,16 +406,16 @@ MB.
 - **Multiplication and division use the coarsest `p` too.** This is a
   placeholder, and is natural for addition and subtraction where
   absolute errors add. For `*` and `/` it misstates relative error.
-  `precision(0.01, 2) * 100` is `1.00` though only one figure is known,
-  and small products can vanish.
+  `sigfig(0.01, 2) * 100` is `1.00` though only one figure is known, and
+  small products can vanish.
 
   ``` r
 
-  precision(0.01, 2) * 100
-  #> <precision[1]>
+  sigfig(0.01, 2) * 100
+  #> <sigfig[1]>
   #> [1] 1.00
-  precision(0.1, 1) * precision(0.1, 1)
-  #> <precision[1]>
+  sigfig(0.1, 1) * sigfig(0.1, 1)
+  #> <sigfig[1]>
   #> [1] 0.0
   ```
 

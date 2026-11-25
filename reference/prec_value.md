@@ -19,13 +19,13 @@ set_digits(x, p)
 - x:
 
   A
-  [`precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/precision.md)
+  [`sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig.md)
   vector.
 
 - p:
 
   The decimal places known, see
-  [`precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/precision.md).
+  [`sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig.md).
   Size 1 or the size of `x`.
 
 ## Value
@@ -43,9 +43,9 @@ set_digits(x, p)
 ## Examples
 
 ``` r
-x <- precision(c(3.14159, 2.71828, 1200), c(2, 2, -2))
+x <- sigfig(c(3.14159, 2.71828, 1200), c(2, 2, -2))
 x
-#> <precision[3]>
+#> <sigfig[3]>
 #> [1] 3.14 2.72 1200
 prec_value(x)
 #> [1]    3.14159    2.71828 1200.00000
@@ -56,6 +56,6 @@ prec_runs(x)
 #> 1     2      2
 #> 2    -2      1
 set_digits(x, 3)
-#> <precision[3]>
+#> <sigfig[3]>
 #> [1]    3.142    2.718 1200.000
 ```

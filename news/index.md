@@ -3,7 +3,7 @@
 ## sigfig 0.0.0.9000
 
 - First release.
-  [`precision()`](https://pkg.mitchelloharawild.com/sigfig/reference/precision.md)
+  [`sigfig()`](https://pkg.mitchelloharawild.com/sigfig/reference/sigfig.md)
   creates numbers with known precision, and arithmetic uses the coarsest
   known precision of its inputs while keeping the full value.
 - The precision is stored with run length encoding using ALTREP, so

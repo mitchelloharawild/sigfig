@@ -70,8 +70,8 @@ dropped? Does <code>1200</code> mean “about twelve hundred”, or exactly
 twelve hundred? Base R forgets this the moment a number is created, so
 the result of <code>3.2 + 4.12</code> is <code>7.32</code>, as though
 both inputs were known to the hundredth.</p>
-<p>The precision package keeps track. A <code>precision</code> vector
-pairs every number with the decimal places to which it is known:</p>
+<p>The precision package keeps track. A <code>sigfig</code> vector pairs
+every number with the decimal places to which it is known:</p>
 <ul>
 <li>values are displayed exactly as their precision describes,</li>
 <li>arithmetic gives a result with the coarsest precision of its inputs,
@@ -84,24 +84,24 @@ numbers with the same precision cost almost nothing extra.</p>
 <div class="section level2">
 <h2 id="constructing">Constructing<a class="anchor" aria-label="anchor" href="#constructing"></a>
 </h2>
-<p><code><a href="../reference/precision.html">precision()</a></code> takes the values and the decimal places
+<p><code><a href="../reference/sigfig.html">sigfig()</a></code> takes the values and the decimal places
 <code>p</code>. A negative <code>p</code> counts powers of ten, so
 <code>p = -2</code> is known to the nearest hundred. <code>p</code> is
 recycled, and the default <code>NA</code> means the precision is not
 known, or the number is exact.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">4.12</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[2]&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">4.12</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;sigfig[2]&gt;</span></span>
 <span><span class="co">#&gt; [1]  3.2 4.12</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">1234.567</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">2</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[4]&gt;</span></span>
+<span><span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">1234.567</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">2</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;sigfig[4]&gt;</span></span>
 <span><span class="co">#&gt; [1]  1234.57     1235     1200 1234.567</span></span></code></pre></div>
-<p><code><a href="../reference/as_precision.html">as_precision()</a></code> also reads the precision from text,
-counting the decimal places written, less any exponent.</p>
+<p><code><a href="../reference/as_sigfig.html">as_sigfig()</a></code> also reads the precision from text, counting
+the decimal places written, less any exponent.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/as_precision.html">as_precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3.20"</span>, <span class="st">"4.1"</span>, <span class="st">"1.20e3"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[3]&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/as_sigfig.html">as_sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3.20"</span>, <span class="st">"4.1"</span>, <span class="st">"1.20e3"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;sigfig[3]&gt;</span></span>
 <span><span class="co">#&gt; [1] 3.20  4.1 1200</span></span></code></pre></div>
 <p>Plain numbers become exact (<code>p = NA</code>), and the precision
 of an existing vector can be replaced with
@@ -115,8 +115,8 @@ many decimal places.</p>
 <ul>
 <li>
 <strong>Positive <code>p</code></strong> shows <code>p</code>
-decimal places, including trailing zeros: <code>precision(3.2, 2)</code>
-is <code>3.20</code>.</li>
+decimal places, including trailing zeros: <code>sigfig(3.2, 2)</code> is
+<code>3.20</code>.</li>
 <li>
 <strong>Zero or negative <code>p</code></strong> shows a whole
 number. With negative <code>p</code> the unknown digits are zeros, so
@@ -129,9 +129,9 @@ with up to 15 significant digits.</li>
 its <code>p</code>.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">9.996</span>, <span class="op">-</span><span class="fl">0.04</span>, <span class="fl">1234.567</span>, <span class="cn">NA</span>, <span class="fl">2.5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">9.996</span>, <span class="op">-</span><span class="fl">0.04</span>, <span class="fl">1234.567</span>, <span class="cn">NA</span>, <span class="fl">2.5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x</span></span>
-<span><span class="co">#&gt; &lt;precision[6]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[6]&gt;</span></span>
 <span><span class="co">#&gt; [1]  3.20 10.00   0.0  1200    NA   2.5</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "3.20"  "10.00" "0.0"   "1200"  "NA"    "2.5"</span></span></code></pre></div>
@@ -150,10 +150,10 @@ full.</p>
 inputs, meaning the smallest <code>p</code>. The full value is
 calculated and kept, and rounded only when displayed.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">4.12</span>, <span class="fl">2</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">4.12</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">a</span> <span class="op">+</span> <span class="va">b</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 7.3</span></span>
 <span><span class="fu"><a href="../reference/prec_value.html">prec_value</a></span><span class="op">(</span><span class="va">a</span> <span class="op">+</span> <span class="va">b</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7.32</span></span></code></pre></div>
@@ -167,7 +167,7 @@ after every step loses what is below the display precision, and the loss
 compounds. Ten additions of <code>0.04</code>, known to the tenth, show
 the difference.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.04</span>, <span class="fl">10</span><span class="op">)</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.04</span>, <span class="fl">10</span><span class="op">)</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Rounding every step: each 0.04 becomes 0.0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="va">`+`</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/prec_value.html">prec_value</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
@@ -175,22 +175,22 @@ the difference.</p>
 <span></span>
 <span><span class="co"># Keeping the full value, and rounding once to display</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 0.4</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span><span class="va">`+`</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 0.4</span></span></code></pre></div>
 <p>Plain numbers are exact, so don’t make the result any coarser, and
 <code>NA</code> precision never wins over a known precision.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">a</span> <span class="op">*</span> <span class="fl">2</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 6.4</span></span>
 <span><span class="va">a</span> <span class="op">+</span> <span class="fl">5</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8.2</span></span>
-<span><span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">5</span>, <span class="cn">NA</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">5</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8.2</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="reductions">Reductions<a class="anchor" aria-label="anchor" href="#reductions"></a>
@@ -202,15 +202,15 @@ use the coarsest precision of all elements. Cumulative functions use the
 coarsest precision of the elements so far. Missing values are ignored
 for the precision only when <code>na.rm = TRUE</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.234</span>, <span class="fl">5.6</span>, <span class="fl">7.89</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.234</span>, <span class="fl">5.6</span>, <span class="fl">7.89</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 14.7</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 4.9</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[3]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[3]&gt;</span></span>
 <span><span class="co">#&gt; [1] 1.234   6.8  14.7</span></span></code></pre></div>
 <p>Rounding functions only ever make the precision coarser:
 <code>round(z, 2)</code> is known to at most 2 decimal places, and
@@ -225,17 +225,17 @@ input.</p>
 <p>Comparison rounds both sides to their common coarsest precision.
 Plain numbers are exact, so take the precision of the other side.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.14159</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">==</span> <span class="fl">3.14</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.14159</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">==</span> <span class="fl">3.14</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
-<span><span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.12</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.1</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.12</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.1</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>Equality like this is not transitive. With <code>3.12</code> and
 <code>3.14</code> both known to the hundredth, and <code>3.1</code>
 known to the tenth:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">u</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.12</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.1</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">3.14</span>, <span class="fl">2</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">u</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.12</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.1</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">3.14</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`u == v` <span class="op">=</span> <span class="va">u</span> <span class="op">==</span> <span class="va">v</span>, `v == w` <span class="op">=</span> <span class="va">v</span> <span class="op">==</span> <span class="va">w</span>, `u == w` <span class="op">=</span> <span class="va">u</span> <span class="op">==</span> <span class="va">w</span><span class="op">)</span></span>
 <span><span class="co">#&gt; u == v v == w u == w </span></span>
 <span><span class="co">#&gt;   TRUE   TRUE  FALSE</span></span></code></pre></div>
@@ -248,8 +248,8 @@ They use each element’s own rounded value <em>and</em> its precision, so
 are different values, with the coarser sorted first. All missing values
 are the same.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.1</span>, <span class="fl">3.1</span>, <span class="fl">3.12</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[2]&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.1</span>, <span class="fl">3.1</span>, <span class="fl">3.12</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;sigfig[2]&gt;</span></span>
 <span><span class="co">#&gt; [1]  3.1 3.10</span></span>
 <span><span class="fu">vctrs</span><span class="fu">::</span><span class="fu"><a href="https://vctrs.r-lib.org/reference/vec_equal.html" class="external-link">vec_equal</a></span><span class="op">(</span><span class="va">u</span>, <span class="va">v</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
@@ -259,7 +259,7 @@ compare the full value.</p>
 <div class="section level2">
 <h2 id="the-data-structure">The data structure<a class="anchor" aria-label="anchor" href="#the-data-structure"></a>
 </h2>
-<p>A <code>precision</code> vector is a <code><a href="https://vctrs.r-lib.org/reference/new_rcrd.html" class="external-link">vctrs::new_rcrd()</a></code>
+<p>A <code>sigfig</code> vector is a <code><a href="https://vctrs.r-lib.org/reference/new_rcrd.html" class="external-link">vctrs::new_rcrd()</a></code>
 record with two fields of equal size: the full values <code>x</code>,
 and the precision <code>p</code>.</p>
 <p><img src="figures/rcrd.svg" class="r-plt" alt="A record with two fields. Field x is a double vector holding 3.2, 4.12, 7.32 and 1234.567. Field p is an integer vector holding 1, 2, 1 and -2. Arrows lead to the printed values 3.2, 4.12, 7.3 and 1200." width="100%"></p>
@@ -277,7 +277,7 @@ value and the position where it ends.</p>
 <p><code><a href="../reference/prec_value.html">prec_runs()</a></code> shows the runs without expanding
 anything.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">big</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">1e6</span><span class="op">)</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">big</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">1e6</span><span class="op">)</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/prec_value.html">prec_runs</a></span><span class="op">(</span><span class="va">big</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   value  length</span></span>
 <span><span class="co">#&gt; 1     1 1000000</span></span>
@@ -290,11 +290,11 @@ the vectors. The values in <code>x</code> are added as usual.</p>
 <p><img src="figures/add.svg" class="r-plt" alt="Two vectors of six elements with precision runs. Vector a has runs 1 and 2 ending at 4 and 6. Vector b has runs 2, 0 and 3 ending at 2, 5 and 6. Splitting at every end and taking the minimum gives 1, 0, 0, 2, and joining equal neighbours gives the result runs 1, 0 and 2 ending at 2, 5 and 6. Below, the x values are added elementwise to give 7.32, 2.38, 10.2, 2.3, 7.25 and 9.433, printed as 7.3, 2.4, 10, 2, 7 and 9.43." width="100%"></p>
 <p>The same example, with live code.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">a6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">1.5</span>, <span class="fl">2.7</span>, <span class="fl">0.9</span>, <span class="fl">5.25</span>, <span class="fl">6.1</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">b6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.12</span>, <span class="fl">0.88</span>, <span class="fl">7.5</span>, <span class="fl">1.4</span>, <span class="fl">2</span>, <span class="fl">3.333</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">a6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.2</span>, <span class="fl">1.5</span>, <span class="fl">2.7</span>, <span class="fl">0.9</span>, <span class="fl">5.25</span>, <span class="fl">6.1</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">b6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.12</span>, <span class="fl">0.88</span>, <span class="fl">7.5</span>, <span class="fl">1.4</span>, <span class="fl">2</span>, <span class="fl">3.333</span><span class="op">)</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ab</span> <span class="op">&lt;-</span> <span class="va">a6</span> <span class="op">+</span> <span class="va">b6</span></span>
 <span><span class="va">ab</span></span>
-<span><span class="co">#&gt; &lt;precision[6]&gt;</span></span>
+<span><span class="co">#&gt; &lt;sigfig[6]&gt;</span></span>
 <span><span class="co">#&gt; [1]  7.3  2.4   10    2    7 9.43</span></span>
 <span><span class="fu"><a href="../reference/prec_value.html">prec_runs</a></span><span class="op">(</span><span class="va">ab</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   value length</span></span>
@@ -339,7 +339,7 @@ million numbers serialises to a few hundred bytes. Loading it requires
 the package to be installed.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/serialize.html" class="external-link">serialize</a></span><span class="op">(</span><span class="fu"><a href="../reference/prec_value.html">prec_digits</a></span><span class="op">(</span><span class="va">big</span><span class="op">)</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 137</span></span>
+<span><span class="co">#&gt; [1] 131</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/serialize.html" class="external-link">serialize</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">1e6</span><span class="op">)</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4000031</span></span></code></pre></div>
 </div>
@@ -429,14 +429,14 @@ bytes for 1 run, and 8 KB for 1000 runs, rather than 40 MB.</p>
 <code>p</code> too.</strong> This is a placeholder, and is natural for
 addition and subtraction where absolute errors add. For <code>*</code>
 and <code>/</code> it misstates relative error.
-<code>precision(0.01, 2) * 100</code> is <code>1.00</code> though only
-one figure is known, and small products can vanish.</p>
+<code>sigfig(0.01, 2) * 100</code> is <code>1.00</code> though only one
+figure is known, and small products can vanish.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 1.00</span></span>
-<span><span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="../reference/precision.html">precision</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;precision[1]&gt;</span></span>
+<span><span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="../reference/sigfig.html">sigfig</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;sigfig[1]&gt;</span></span>
 <span><span class="co">#&gt; [1] 0.0</span></span></code></pre></div>
 <p>The rule is provisional. The precision of a result is decided in one
 place, so a rule based on significant figures (as taught in school
