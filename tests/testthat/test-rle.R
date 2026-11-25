@@ -214,7 +214,7 @@ test_that("serialises to a new process", {
   expect_lt(length(serialize(field_p(readRDS(rds)), NULL)), 1000)
   # The package isn't attached or loaded beforehand
   writeLines(c(
-    sprintf(".libPaths(c(%s, .libPaths()))", deparse(lib)),
+    sprintf(".libPaths(c(%s, %s))", deparse(lib), paste(deparse(.libPaths()), collapse = "")),
     sprintf("x <- readRDS(%s)", deparse(rds)),
     "stopifnot(format(x[c(1, 100000)]) == c('0.1', '12500'))",
     "stopifnot(sigfig::prec_runs(x)$length == 5e4)",
