@@ -1,4 +1,4 @@
-Package: precision
+Package: sigfig
 Title: Numeric Vectors with Known Precision
 Version: 0.0.0.9000
 Authors@R: 
@@ -18,8 +18,8 @@ Description: A semantic data type for numbers with known precision. Each element
     Representations for R Objects), allowing the same precision to be repeated 
     many times throughout a vector with minimal memory use.
 License: MIT + file LICENSE
-URL: https://pkg.mitchelloharawild.com/precision/, https://github.com/mitchelloharawild/precision
-BugReports: https://github.com/mitchelloharawild/precision/issues
+URL: https://pkg.mitchelloharawild.com/sigfig/, https://github.com/mitchelloharawild/sigfig
+BugReports: https://github.com/mitchelloharawild/sigfig/issues
 Encoding: UTF-8
 Language: en-GB
 Roxygen: list(markdown = TRUE)

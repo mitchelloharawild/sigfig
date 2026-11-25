@@ -36,7 +36,7 @@ pak::pak("mitchelloharawild/precision")
 ## Usage
 
 ``` r
-library(precision)
+library(sigfig)
 
 x <- precision(3.2, p = 1)
 y <- precision(4.12, p = 2)
@@ -79,7 +79,7 @@ prec_runs(precision(rep(1.5, 1e6), p = 1))
 #> 1     1 1000000
 ```
 
-See `vignette("precision")` for the details of display, comparison, and
+See `vignette("sigfig")` for the details of display, comparison, and
 how the precision is stored.
 
 ## Caveats

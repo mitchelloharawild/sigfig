@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(precision)
+library(sigfig)
 ```
 
 ## The problem
@@ -202,7 +202,7 @@ knitr::include_graphics("figures/lifecycle.svg")
 A slice of a compact vector is compact, and writing to a copy of `p` doesn't disturb the original. The state check below uses an internal function, only to show what happens.
 
 ```{r lifecycle}
-state <- precision:::rle_state
+state <- sigfig:::rle_state
 
 state(prec_digits(big))
 state(prec_digits(big[2:(1e6 - 1)]))

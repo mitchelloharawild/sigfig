@@ -66,4 +66,4 @@ importFrom(stats,
   median,
   quantile
 )
-useDynLib(precision, .registration = TRUE, .fixes = "C_")
+useDynLib(sigfig, .registration = TRUE, .fixes = "C_")

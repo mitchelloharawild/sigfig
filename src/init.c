@@ -21,7 +21,7 @@ static const R_CallMethodDef call_entries[] = {
   {NULL, NULL, 0}
 };
 
-void R_init_precision(DllInfo *dll) {
+void R_init_sigfig(DllInfo *dll) {
   rle_init_class(dll);
   round_init();
   R_registerRoutines(dll, NULL, call_entries, NULL, NULL);

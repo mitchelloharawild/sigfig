@@ -6,7 +6,7 @@
 #' @importFrom cli cli_abort
 #' @importFrom rlang caller_env
 #' @importFrom stats median quantile
-#' @useDynLib precision, .registration = TRUE, .fixes = "C_"
+#' @useDynLib sigfig, .registration = TRUE, .fixes = "C_"
 ## usethis namespace: end
 
 ## mockable bindings: start

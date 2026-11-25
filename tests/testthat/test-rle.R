@@ -204,9 +204,9 @@ test_that("serialises runs", {
 test_that("serialises to a new process", {
   skip_on_cran()
   # load_all() doesn't provide an installed package, so needs a library with one
-  path <- getNamespaceInfo("precision", "path")
-  lib <- Sys.getenv("PRECISION_TEST_LIB", dirname(path))
-  skip_if_not(file.exists(file.path(lib, "precision", "Meta", "package.rds")))
+  path <- getNamespaceInfo("sigfig", "path")
+  lib <- Sys.getenv("SIGFIG_TEST_LIB", dirname(path))
+  skip_if_not(file.exists(file.path(lib, "sigfig", "Meta", "package.rds")))
   rds <- tempfile(fileext = ".rds")
   script <- tempfile(fileext = ".R")
   on.exit(unlink(c(rds, script)))
@@ -217,8 +217,8 @@ test_that("serialises to a new process", {
     sprintf(".libPaths(c(%s, .libPaths()))", deparse(lib)),
     sprintf("x <- readRDS(%s)", deparse(rds)),
     "stopifnot(format(x[c(1, 100000)]) == c('0.1', '12500'))",
-    "stopifnot(precision::prec_runs(x)$length == 5e4)",
-    "cat(precision:::rle_state(precision::prec_digits(x)))"
+    "stopifnot(sigfig::prec_runs(x)$length == 5e4)",
+    "cat(sigfig:::rle_state(sigfig::prec_digits(x)))"
   ), script)
   out <- system2(file.path(R.home("bin"), "Rscript"), c("--vanilla", script), stdout = TRUE)
   expect_equal(out, "compact")
